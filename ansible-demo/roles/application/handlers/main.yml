@@ -1,0 +1,7 @@
+---
+# handlers file for roles/application
+- name: Restart Application
+  community.docker.docker_container:
+    name: application
+    state: started
+  become: true

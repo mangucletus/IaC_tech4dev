@@ -1,0 +1,7 @@
+---
+# handlers file for roles/web
+- name: Restart Nginx
+  community.docker.docker_container:
+    name: nginx
+    state: started
+  become: true

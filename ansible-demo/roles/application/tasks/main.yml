@@ -1,0 +1,45 @@
+---
+# tasks file for roles/application
+- name: Create Application Directory
+  ansible.builtin.file:
+    path: /opt/application
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Copy Dockerfile
+  ansible.builtin.template:
+    src: Dockerfile.j2
+    dest: /opt/application/Dockerfile
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+
+- name: Copy Application Source Code
+  ansible.builtin.copy:
+    src: files/app.py
+    dest: /opt/application
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+
+- name: Build Application Image
+  community.docker.docker_image_build:
+    name: application
+    tag: "{{ application_version }}"
+    path: /opt/application
+    platform:
+      - linux/amd64
+
+- name: Deploy Application Container
+  community.docker.docker_container:
+    name: application
+    image: "application:{{ application_version }}"
+    state: started
+    ports:
+      - "5000:5000"
+    volumes:
+      - "/opt/application:/opt/application"
+    restart_policy: always
+  notify: Restart Application

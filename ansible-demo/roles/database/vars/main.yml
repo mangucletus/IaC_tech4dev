@@ -1,0 +1,4 @@
+---
+# vars file for roles/database
+database_db_engine: "postgres"
+database_db_version: "latest"

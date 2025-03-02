@@ -1,0 +1,3 @@
+---
+# vars file for roles/web
+web_nginx_version: "latest"

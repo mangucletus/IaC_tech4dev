@@ -1,0 +1,84 @@
+---
+# tasks file for roles/common
+- name: Update APT Cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Wait for any other apt locks to be released
+  ansible.builtin.shell:
+    cmd: "while pgrep -x apt-get > /dev/null; do sleep 2; done"
+  changed_when: false
+
+- name: Remove any stale lock files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /var/lib/dpkg/lock
+    - /var/lib/dpkg/lock-frontend
+    - /var/cache/apt/archives/lock
+    - /var/cache/apt/archives/lock-frontend
+  become: true
+
+# - name: Ensure common utilities are installed
+#   ansible.builtin.apt:
+#     name: "{{ item }}"
+#     state: present
+#   loop:
+#     - curl
+#     - vim
+#     - wget
+#     - unzip
+#     - git
+#     - tmux
+#     - python3
+#     - python3-pip
+#     - software-properties-common
+#     - apt-transport-https
+#     - ca-certificates
+#     - gnupg
+
+- name: Ensure common utilities are installed
+  ansible.builtin.apt:
+    name:
+      - curl
+      - unzip
+      - git
+      - python3
+      - python3-pip
+      - software-properties-common
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
+      - gnupg-agent
+    state: present
+
+- name: Add Docker GPG Key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+
+- name: Update apt and install Docker
+  ansible.builtin.apt:
+    name: docker-ce
+    state: present
+    update_cache: true
+  become: true
+
+- name: Add User to Docker Group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Install Docker Module for Python
+  ansible.builtin.pip:
+    name: docker
+    state: present
+    executable: pip3

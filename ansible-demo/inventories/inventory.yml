@@ -1,0 +1,20 @@
+databases:
+  hosts:
+    db-0:
+      ansible_host: x.x.x.x
+    db-1:
+      ansible_host: x.x.x.x
+
+applications:
+  hosts:
+    app-0:
+      ansible_host: x.x.x.x
+    app-1:
+      ansible_host: x.x.x.x
+        
+web:
+  hosts:
+    web-0:
+      ansible_host: x.x.x.x
+    web-1:
+      ansible_host: x.x.x.x

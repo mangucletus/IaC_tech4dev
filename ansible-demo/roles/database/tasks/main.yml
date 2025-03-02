@@ -1,0 +1,14 @@
+---
+# tasks file for roles/database
+- name: Deploy Database Container
+  community.docker.docker_container:
+    name: "{{ database_db_engine }}"
+    image: "{{ database_db_engine }}:{{ database_db_version }}"
+    state: started
+    ports:
+      - "5432:5432"
+    volumes:
+      - "/var/lib/postgresql/data:/var/lib/postgresql/data"
+    restart_policy: always
+  become: true
+  notify: Restart Database

@@ -1,0 +1,14 @@
+databases:
+  hosts:
+    worker-01:
+      ansible_host: worker-01@orb
+
+applications:
+  hosts:
+    worker-02:
+      ansible_host: worker-01@orb
+        
+web:
+  hosts:
+    worker-03:
+      ansible_host: worker-01@orb

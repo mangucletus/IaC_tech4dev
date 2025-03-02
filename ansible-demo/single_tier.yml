@@ -1,0 +1,2 @@
+- ansible.builtin.import_playbook: plays/common.yml
+- ansible.builtin.import_playbook: plays/web.yml

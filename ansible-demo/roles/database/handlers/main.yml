@@ -1,0 +1,7 @@
+---
+# handlers file for roles/database
+- name: Restart Database
+  community.docker.docker_container:
+    name: database
+    state: started
+  become: true

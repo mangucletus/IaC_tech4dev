@@ -12,3 +12,7 @@
     restart_policy: always
   become: true
   notify: Restart Nginx
+  tags:
+    - nginx
+    - docker
+    - deployment

@@ -17,9 +17,9 @@ module "iam" {
   source = "./modules/iam"
 }
 
-module "key_pair" {
-  source = "./modules/security"
-}
+# module "key_pair" {
+#   source = "./modules/security"
+# }
 module "web" {
   source           = "./modules/ec2"
   ami              = data.aws_ami.ubuntu.id

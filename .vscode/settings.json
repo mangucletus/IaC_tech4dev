@@ -1,0 +1,4 @@
+{
+    "git.ignoreLimitWarning": true,
+    "ansible.python.interpreterPath": "/usr/bin/python3"
+}

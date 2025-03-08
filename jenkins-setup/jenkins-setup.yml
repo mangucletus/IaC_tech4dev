@@ -1,0 +1,49 @@
+---
+- name: Install and configure Jenkins
+  hosts: localhost
+  become: yes
+  tasks:
+
+    - name: Update and upgrade packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Install Java (OpenJDK 11)
+      apt:
+        name: openjdk-11-jdk
+        state: present
+
+    - name: Add Jenkins repository key
+      shell: wget -q -O - https://pkg.jenkins.io/jenkins.io.key | sudo tee /etc/apt/trusted.gpg.d/jenkins.asc
+
+    - name: Add Jenkins repository
+      shell: sudo sh -c 'wget -q -O /etc/apt/sources.list.d/jenkins.list https://pkg.jenkins.io/debian/jenkins.io.list'
+
+    - name: Update package index
+      apt:
+        update_cache: yes
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+
+    - name: Start Jenkins service
+      systemd:
+        name: jenkins
+        state: started
+        enabled: yes
+
+    - name: Get Jenkins initial admin password
+      command: cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: jenkins_password
+      changed_when: false
+
+    - name: Display Jenkins initial admin password
+      debug:
+        msg: "Jenkins initial admin password: {{ jenkins_password.stdout }}"
+
+    - name: Allow port 8080 in firewall (if UFW is enabled)
+      command: sudo ufw allow 8080
+      ignore_errors: yes

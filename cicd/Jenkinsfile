@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    
+    // triggers {
+    //     cron('*/2 * * * *')
+    // }
+    
+    environment {
+        DEPLOYMENT_ENV = "testing"
+        MAINTAINER = "david"
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                sh "sleep 2"
+                echo "Code checked out from repo successfully"
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo "Build completed"
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sh "sleep 3"
+                echo "Build completed"
+            }
+        }
+
+        stage('Post Deployment') {
+            steps {
+                echo "We are cleaning up using Wehbooks"
+              }
+          }
+    }
+
+}

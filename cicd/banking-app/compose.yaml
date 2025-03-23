@@ -1,0 +1,23 @@
+services:
+  api:
+    build:
+      context: backend-api/.
+    ports:
+      - 8080:8080
+  processor:
+    build:
+      context: transaction-service/.
+    environment:
+      - API_HOST=api
+    ports:
+      - 5000:5000
+    depends_on:
+      - api
+  frontend:
+    build:
+      context: frontend/.
+    ports:
+      - 80:80
+    depends_on:
+      - api
+      - processor
